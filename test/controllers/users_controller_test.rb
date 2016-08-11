@@ -93,4 +93,28 @@ class UsersControllerTest < ActionController::TestCase
                  jdata['data']['attributes']['full-name']
   end
 
+  test "Updating an existing user with valid data should update that user" do
+    user = users('user_1')
+    @request.headers["Content-Type"] = 'application/vnd.api+json'
+    @request.headers["X-Api-Key"] = user.token
+    patch :update, params: {
+                     id: user.id,
+                     data: {
+                       id: user.id,
+                       type: 'users',
+                       attributes: { full_name: 'User Number1a' }}}
+    assert_response 200
+    jdata = JSON.parse response.body
+    assert_equal 'User Number1a', jdata['data']['attributes']['full-name']
+  end
+
+  test "Should delete user" do
+    user = users('user_1')
+    ucount = User.count - 1
+    @request.headers["X-Api-Key"] = user.token
+    delete :destroy, params: { id: users('user_5').id }
+    assert_response 204
+    assert_equal ucount, User.count
+  end
+
 end

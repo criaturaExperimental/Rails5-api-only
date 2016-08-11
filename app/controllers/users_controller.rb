@@ -22,6 +22,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    if @user.update_attributes(user_params)
+      render json: @user, status: :ok
+    else
+      render_error(@user, :unprocessable_entity)
+    end
+  end
+
+  def destroy
+    @user.destroy
+    head 204
+  end
+
   private
   def set_user
     begin
