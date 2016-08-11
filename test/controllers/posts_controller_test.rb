@@ -12,6 +12,12 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal l['first'], l['prev']
     assert_equal l['last'], l['next']
     assert_equal Post.count, jdata['meta']['total-count']
-
+  end
+  test "Should get properly sorted list" do
+    post = Post.order('rating DESC').first
+    get :index, params: { sort: '-rating' }
+    assert_response :success
+    jdata = JSON.parse response.body
+    assert_equal post.title, jdata['data'][0]['attributes']['title']
   end
 end
