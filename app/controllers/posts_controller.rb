@@ -1,6 +1,9 @@
 class PostsController < ApplicationController
   def index
     posts = Post.all
+    if params[:filter]
+      posts = posts.where(["category = ?", params[:filter]])
+    end
     if params['sort']
       f = params['sort'].split(',').first
       field = f[0] == '-' ? f[1..-1] : f

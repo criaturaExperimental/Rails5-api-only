@@ -20,4 +20,10 @@ class PostsControllerTest < ActionController::TestCase
     jdata = JSON.parse response.body
     assert_equal post.title, jdata['data'][0]['attributes']['title']
   end
+  test "Should get filtered list" do
+    get :index, params: { filter: 'First' }
+    assert_response :success
+    jdata = JSON.parse response.body
+    assert_equal Post.where(category: 'First').count, jdata['data'].length
+  end
 end
